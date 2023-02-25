@@ -8,7 +8,7 @@ interface TaskListRepository {
 
     fun editTaskItem (taskItem: TaskItem)
 
-    fun getTaskItem (taskItem: Int): TaskItem
+    fun getTaskItem (taskItemId: Int): TaskItem
 
     fun getTaskList(): List<TaskItem>
 
