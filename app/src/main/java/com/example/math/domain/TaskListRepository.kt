@@ -1,5 +1,7 @@
 package com.example.math.domain
 
+import androidx.lifecycle.LiveData
+
 interface TaskListRepository {
 
     fun addTaskItem (taskItem: TaskItem)
@@ -10,8 +12,6 @@ interface TaskListRepository {
 
     fun getTaskItem (taskItemId: Int): TaskItem
 
-    fun getTaskList(): List<TaskItem>
+    fun getTaskList(): LiveData<List<TaskItem>>
 
-
-
-    }
+}

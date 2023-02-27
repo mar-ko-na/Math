@@ -13,22 +13,17 @@ class MainViewModel : ViewModel() {
     private val deleteTaskItemUseCase = DeleteTaskItemUseCase(repository)
     private val editTaskItemUseCase = EditTaskItemUseCase(repository)
 
-    val taskList = MutableLiveData<List<TaskItem>>()
+    val taskList = getTaskListUseCase.getTaskList()
 
-    fun getTaskList() {
-        val list = getTaskListUseCase.getTaskList()
-        taskList.value = list
-    }
 
-    fun deleteTaskList(taskItem: TaskItem){
+
+    fun deleteTaskItem(taskItem: TaskItem){
         deleteTaskItemUseCase.deleteTaskItem(taskItem)
-        getTaskList()
     }
 
     fun changeEnableState(taskItem: TaskItem){
         val newItem = taskItem.copy(enabled = !taskItem.enabled)
         editTaskItemUseCase.editTaskItem(newItem)
-        getTaskList()
     }
 
 }
