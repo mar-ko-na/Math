@@ -4,17 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.math.domain.TaskItem
 import com.example.math.domain.TaskListRepository
+import kotlin.random.Random
 
 object TaskListRepositoryImpl: TaskListRepository {
 
     private val  taskListLD = MutableLiveData<List<TaskItem>>()
-    private val taskList = mutableListOf<TaskItem>()
+    private val taskList = sortedSetOf<TaskItem>({o1, o2 -> o1.id.compareTo(o2.id) })
 
     private var autoIncrementId = 0
 
     init {
-        for (i in 0 until 10){
-            val item = TaskItem("Name $i", i, true, 2)
+        for (i in 0 until 1000){
+            val item = TaskItem("Name $i", i, Random.nextBoolean(), 2)
             addTaskItem(item)
         }
     }
