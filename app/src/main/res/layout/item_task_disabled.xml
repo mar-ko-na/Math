@@ -14,16 +14,26 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/border"
+        android:layout_height="58dp"
+        android:background="@drawable/line"
         android:orientation="horizontal"
         android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/cb_enabled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:clickable="false"
+            app:srcCompat="@drawable/check_on" />
 
         <TextView
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
+            android:layout_weight="0"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -35,20 +45,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:background="@color/fon"
+            android:paddingLeft="10dp"
+            android:paddingTop="1dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="1dp"
             android:text="pasha"
             android:textColor="@color/black"
             android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/tv_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:textAlignment="viewEnd"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="1" />
 
     </LinearLayout>
 
