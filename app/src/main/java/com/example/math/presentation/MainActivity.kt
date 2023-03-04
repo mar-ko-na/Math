@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.math.R
+import com.example.math.domain.TaskItem
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,13 +32,10 @@ class MainActivity : AppCompatActivity() {
                 TaskListAdapter.VIEW_TYPE_ENABLED,
                 TaskListAdapter.MAX_POOL_SIZE
             )
-            recycledViewPool.setMaxRecycledViews(
-                TaskListAdapter.VIEW_TYPE_DISABLED,
-                TaskListAdapter.MAX_POOL_SIZE
-            )
         }
-        setupClickListener()
         setupSwipeListener(rvShopList)
+
+
     }
 
     private fun setupSwipeListener(rvTaskList: RecyclerView) {
@@ -55,20 +53,15 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val item = taskListAdapter.taskList[viewHolder.adapterPosition]
+                val item = taskListAdapter.taskList[viewHolder.bindingAdapterPosition]
                 viewModel.deleteTaskItem(item)
             }
         }
         val itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(rvTaskList)
     }
-
-
-    private fun setupClickListener() {
-        taskListAdapter.onTaskItemClickListener = {
-            viewModel.changeEnableState(it)
-
-        }
-    }
-
 }
+
+
+
+
