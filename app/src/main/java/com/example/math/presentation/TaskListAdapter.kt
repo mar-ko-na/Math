@@ -18,6 +18,7 @@ class TaskListAdapter: RecyclerView.Adapter<TaskListAdapter.TaskItemViewHolder>(
 
     var count = 0
     var ert = 0
+    var onTaskCBClickListener: ((TaskItem) -> Unit)? = null
     var taskList = listOf<TaskItem>()
         set(value){
             val callback = TaskListDiffCallBack(taskList, value)
@@ -44,6 +45,7 @@ class TaskListAdapter: RecyclerView.Adapter<TaskListAdapter.TaskItemViewHolder>(
 
         viewHolder.cbEnabled.setOnCheckedChangeListener { buttonView, isChecked ->
             Log.d("MyLog", "cb is checked: $isChecked")
+            onTaskCBClickListener?.invoke(taskItem)
 
         }
 
@@ -78,6 +80,10 @@ class TaskListAdapter: RecyclerView.Adapter<TaskListAdapter.TaskItemViewHolder>(
         val tvWorker = view.findViewById<TextView>(R.id.tv_worker)
         val cbEnabled = view.findViewById<CheckBox>(R.id.cb_enabled)
     }
+
+//    interface OnTaskCBClickListener {
+//        fun onTaskCBClick(taskItem: TaskItem)
+//    }
 
 
     companion object {

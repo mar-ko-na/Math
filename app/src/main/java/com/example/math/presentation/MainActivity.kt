@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setupRecyclerView()
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.taskList.observe(this) {
             taskListAdapter.taskList = it
         }
@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
         setupSwipeListener(rvShopList)
+        setupCBClickListener()
 
 
     }
