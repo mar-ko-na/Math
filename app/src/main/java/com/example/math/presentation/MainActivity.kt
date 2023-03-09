@@ -60,6 +60,11 @@ class MainActivity : AppCompatActivity() {
         val itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(rvTaskList)
     }
+    private fun setupCBClickListener() {
+        taskListAdapter.onTaskCBClickListener = {
+            viewModel.changeEnableState(it)
+        }
+    }
 }
 
 

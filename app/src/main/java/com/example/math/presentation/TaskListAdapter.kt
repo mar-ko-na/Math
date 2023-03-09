@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -41,6 +42,11 @@ class TaskListAdapter: RecyclerView.Adapter<TaskListAdapter.TaskItemViewHolder>(
         viewHolder.tvName.text = taskItem.name
         viewHolder.tvWorker.text = taskItem.worker.toString()
 
+        viewHolder.cbEnabled.setOnCheckedChangeListener { buttonView, isChecked ->
+            Log.d("MyLog", "cb is checked: $isChecked")
+
+        }
+
 
     }
 
@@ -48,12 +54,12 @@ class TaskListAdapter: RecyclerView.Adapter<TaskListAdapter.TaskItemViewHolder>(
         super.onViewRecycled(viewHolder)
         viewHolder.tvName.text = ""
         viewHolder.tvWorker.text = ""
-        viewHolder.tvName.setTextColor(
-            ContextCompat.getColor(
-                viewHolder.view.context,
-                android.R.color.holo_green_dark
-            )
-        )
+//        viewHolder.tvName.setTextColor(
+//            ContextCompat.getColor(
+//                viewHolder.view.context,
+//                android.R.color.holo_green_dark
+//            )
+//        )
     }
 
     override fun getItemCount(): Int {
@@ -62,6 +68,7 @@ class TaskListAdapter: RecyclerView.Adapter<TaskListAdapter.TaskItemViewHolder>(
 
     override fun getItemViewType(position: Int): Int {
         val item = taskList[position]
+
         return VIEW_TYPE_ENABLED
 
     }
@@ -69,6 +76,7 @@ class TaskListAdapter: RecyclerView.Adapter<TaskListAdapter.TaskItemViewHolder>(
     class TaskItemViewHolder(val view: View): RecyclerView.ViewHolder(view) {
         val tvName = view.findViewById<TextView>(R.id.tv_name)
         val tvWorker = view.findViewById<TextView>(R.id.tv_worker)
+        val cbEnabled = view.findViewById<CheckBox>(R.id.cb_enabled)
     }
 
 
