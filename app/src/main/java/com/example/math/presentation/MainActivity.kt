@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.taskList.observe(this) {
-            taskListAdapter.taskList = it
+            taskListAdapter.submitList(it)
         }
     }
 
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val item = taskListAdapter.taskList[viewHolder.bindingAdapterPosition]
+                val item = taskListAdapter.currentList[viewHolder.bindingAdapterPosition]
                 viewModel.deleteTaskItem(item)
             }
         }

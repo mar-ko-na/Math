@@ -3,10 +3,10 @@ package com.example.math.presentation
 import androidx.recyclerview.widget.DiffUtil
 import com.example.math.domain.TaskItem
 
-class TaskListDiffCallBack(
+class TaskListDiffCallback (
     private val oldList: List<TaskItem>,
     private val newList: List<TaskItem>,
-): DiffUtil.Callback() {
+    ): DiffUtil.Callback() {
 
     override fun getOldListSize(): Int {
         return oldList.size
