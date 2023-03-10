@@ -15,7 +15,7 @@ object TaskListRepositoryImpl: TaskListRepository {
 
     init {
         for (i in 0 until 100){
-            val item = TaskItem("Name $i", i, Random.nextBoolean(), 2)
+            val item = TaskItem("Name $i", "$i", Random.nextBoolean())
             addTaskItem(item)
         }
     }

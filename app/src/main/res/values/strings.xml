@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Math</string>
     <string name="add_shop_item_content_description">Salfetki</string>
+    <string name="save">Сохранить</string>
+    <string name="back">Назад</string>
+    <string name="taskName">Введите название</string>
+    <string name="taskDescription">Добавить заметку</string>
 </resources>

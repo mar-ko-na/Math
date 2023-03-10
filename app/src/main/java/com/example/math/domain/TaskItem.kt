@@ -3,9 +3,10 @@ package com.example.math.domain
 data class TaskItem(
 
     val name: String,
-    val worker: Int,
+//    val worker: String,
+    val description: String,
     val enabled: Boolean,
-    val time: Int,
+//    val period: Int,
     var id: Int = UNDEFINED_ID,
 ){
     companion object{
