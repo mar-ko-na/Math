@@ -1,5 +1,7 @@
 package com.example.math.presentation
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.math.data.TaskListRepositoryImpl
 import com.example.math.domain.AddTaskItemUseCase
@@ -15,8 +17,25 @@ class TaskItemViewModel: ViewModel() {
     private val addTaskItemUseCase = AddTaskItemUseCase(repository)
     private val editTaskItemUseCase = EditTaskItemUseCase(repository)
 
+    private  val _errorInputName  = MutableLiveData<Boolean>()
+    val errorInputName: LiveData<Boolean>
+        get() = _errorInputName
+
+    private  val _errorInputDescription  = MutableLiveData<Boolean>()
+    val errorInputDescription: LiveData<Boolean>
+        get() = _errorInputDescription
+
+    private val _taskItem = MutableLiveData<TaskItem>()
+    val taskItem: LiveData<TaskItem>
+        get() = _taskItem
+
+    private val _shouldCloseScreen = MutableLiveData<Unit>()
+    val shouldCloseScreen: LiveData<Unit>
+        get() = _shouldCloseScreen
+
     fun getTaskItem(taskItemId: Int){
         val item = getTaskItemUseCase.getTaskItem(taskItemId)
+        _taskItem.value = item
     }
     fun addTaskItem(inputTaskName: String?, inputDescription: String?) {
         val name = parseName(inputTaskName)
@@ -25,6 +44,7 @@ class TaskItemViewModel: ViewModel() {
         if (fieldsValid){
             val taskItem = TaskItem(name, description,false)
             addTaskItemUseCase.addTaskItem(taskItem)
+            finishWork()
         }
 
     }
@@ -33,8 +53,12 @@ class TaskItemViewModel: ViewModel() {
         val description = parseDescription(inputDescription)
         val fieldsValid = validateInput(name, description)
         if (fieldsValid){
-            val taskItem = TaskItem(name, description,true)
-            editTaskItemUseCase.editTaskItem(taskItem)
+            _taskItem.value?.let {
+                val item = it.copy(name = name, description = description)
+                editTaskItemUseCase.editTaskItem(item)
+                finishWork()
+            }
+
         }
     }
     private fun parseName(inputTaskName: String?): String {
@@ -48,13 +72,26 @@ class TaskItemViewModel: ViewModel() {
     private fun validateInput(name: String, description: String): Boolean {
         var result = true
         if (name.isBlank()) {
-//             TODO: show error input name
+            _errorInputName.value = true
             result = false
         }
         if (description.isBlank()) {
-//             TODO: show error input desc
+             _errorInputDescription.value = true
             result = false
         }
         return result
+    }
+
+    public fun resetErrorInputName() {
+        _errorInputName.value = false
+    }
+
+    public fun resetErrorInputDescription() {
+        _errorInputDescription.value = false
+    }
+
+    private fun finishWork() {
+        _shouldCloseScreen.value = Unit
+
     }
 }
