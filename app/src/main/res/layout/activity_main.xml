@@ -8,27 +8,42 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-android:id="@+id/rv_task_list"
-android:layout_width="0dp"
-android:layout_height="0dp"
-app:layout_constraintBottom_toBottomOf="parent"
-app:layout_constraintEnd_toEndOf="parent"
-app:layout_constraintStart_toStartOf="parent"
-app:layout_constraintTop_toTopOf="parent"
-app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-tools:listitem="@layout/item_task_enabled"/>
+        android:id="@+id/rv_task_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:listitem="@layout/item_task_enabled" />
 
-<com.google.android.material.floatingactionbutton.FloatingActionButton
-android:id="@+id/button_add_shop_item"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:layout_marginEnd="16dp"
-android:layout_marginBottom="16dp"
-android:clickable="true"
-android:contentDescription="@string/add_shop_item_content_description"
-android:focusable="true"
-app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:srcCompat="@drawable/ic_add"
- />
+<!--    <ImageView-->
+<!--        android:id="@+id/button_add_shop_item"-->
+<!--        android:layout_width="90dp"-->
+<!--        android:layout_height="90dp"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        android:layout_marginBottom="16dp"-->
+<!--        android:clickable="true"-->
+<!--        android:contentDescription="@string/add_shop_item_content_description"-->
+<!--        android:focusable="true"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:srcCompat="@drawable/add_button" />-->
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/button_add_shop_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:contentDescription="@string/add_shop_item_content_description"
+        android:focusable="true"
+        app:backgroundTint="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/add" />
 </androidx.constraintlayout.widget.ConstraintLayout>

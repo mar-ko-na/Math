@@ -37,6 +37,7 @@ class TaskListAdapter: ListAdapter<TaskItem, TaskItemViewHolder>(TaskItemDiffCal
             onTaskCBClickListener?.invoke(taskItem)
 
         }
+        
 
 
     }
