@@ -5,4 +5,6 @@
     <string name="back">Назад</string>
     <string name="taskName">Введите название</string>
     <string name="taskDescription">Добавить заметку</string>
+    <string name="error_input_count">Error:</string>
+    <string name="error_input_name">Error:</string>
 </resources>
