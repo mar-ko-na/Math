@@ -10,6 +10,7 @@ import com.example.math.domain.TaskItem
 class TaskListAdapter: ListAdapter<TaskItem, TaskItemViewHolder>(TaskItemDiffCallback()) {
 
     var onTaskCBClickListener: ((TaskItem) -> Unit)? = null
+    var onTaskItemClickListener: ((TaskItem) -> Unit)? = null
 //        set(value){
 //            field = value
 //        }
@@ -32,10 +33,12 @@ class TaskListAdapter: ListAdapter<TaskItem, TaskItemViewHolder>(TaskItemDiffCal
 
         viewHolder.cbEnabled.setOnCheckedChangeListener(null)
         viewHolder.cbEnabled.isChecked = taskItem.enabled
-        viewHolder.cbEnabled.setOnCheckedChangeListener { buttonView, isChecked ->
+        viewHolder.cbEnabled.setOnCheckedChangeListener { _, isChecked ->
             Log.d("MyLog", "cb is checked: $isChecked")
             onTaskCBClickListener?.invoke(taskItem)
-
+        }
+        viewHolder.view.setOnClickListener{
+            onTaskItemClickListener?.invoke(taskItem)
         }
         
 
@@ -45,7 +48,7 @@ class TaskListAdapter: ListAdapter<TaskItem, TaskItemViewHolder>(TaskItemDiffCal
 
 
     override fun getItemViewType(position: Int): Int {
-        val item = getItem(position)
+//        val item = getItem(position)
 
         return VIEW_TYPE_ENABLED
 
