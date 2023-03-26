@@ -29,7 +29,7 @@ class TaskListAdapter: ListAdapter<TaskItem, TaskItemViewHolder>(TaskItemDiffCal
 
         val taskItem = getItem(position)
         viewHolder.tvName.text = taskItem.name
-        viewHolder.tvWorker.text = taskItem.description.toString()
+        viewHolder.tvWorker.text = taskItem.description
 
         viewHolder.cbEnabled.setOnCheckedChangeListener(null)
         viewHolder.cbEnabled.isChecked = taskItem.enabled
