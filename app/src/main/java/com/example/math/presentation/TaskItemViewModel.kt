@@ -82,7 +82,7 @@ class TaskItemViewModel: ViewModel() {
         return result
     }
 
-    private fun resetErrorInputName() {
+     fun resetErrorInputName() {
         _errorInputName.value = false
     }
 
