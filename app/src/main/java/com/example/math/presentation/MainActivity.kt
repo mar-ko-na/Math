@@ -1,38 +1,98 @@
 package com.example.math.presentation
 
-import android.annotation.SuppressLint
-import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.math.R
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.example.math.databinding.ActivityMainBinding
+import com.example.math.domain.TaskItem
+import javax.inject.Inject
+import kotlin.concurrent.thread
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), TaskItemFragment.OnEditingFinishedListener {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var taskListAdapter: TaskListAdapter
+    private lateinit var binding: ActivityMainBinding
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val component by lazy{
+        (application as TaskApplication).component
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        component.inject(this)
+
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setupRecyclerView()
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
         viewModel.taskList.observe(this) {
             taskListAdapter.submitList(it)
         }
-        val buttonAddItem = findViewById<FloatingActionButton>(R.id.button_add_shop_item)
-        buttonAddItem.setOnClickListener{
-            val intent = TaskItemActivity.mewIntentAddItem(this)
-            startActivity(intent)
+        binding.buttonAddTaskItem.setOnClickListener {
+            if (isOnePaneMode()){
+                val intent = TaskItemActivity.newIntentAddItem(this)
+                startActivity(intent)
+            } else {
+                launchFragment(TaskItemFragment.newInstanceAddItem())
+            }
+        }
+        thread {
+            val cursor = contentResolver.query(
+                Uri.parse("content://com.example.math/task_items"),
+                null,
+                null,
+                null,
+                null,
+                null,
+            )
+            while (cursor?.moveToNext() == true) {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
+                val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+                val description = cursor.getString(cursor.getColumnIndexOrThrow("count"))
+                val enabled = cursor.getInt(cursor.getColumnIndexOrThrow("enabled")) > 0
+                val taskItem = TaskItem(
+                    id = id,
+                    name = name,
+                    description = description,
+                    enabled = enabled
+                )
+                Log.d("MainActivity", taskItem.toString())
+            }
+            cursor?.close()
         }
 
     }
 
+    override  fun onEditingFinished() {
+        Toast.makeText(this@MainActivity, "Success", Toast.LENGTH_SHORT).show()
+        supportFragmentManager.popBackStack()
+    }
+
+    private fun isOnePaneMode(): Boolean {
+        return binding.taskItemContainer == null
+    }
+
+    private fun launchFragment(fragment: Fragment) {
+        supportFragmentManager.popBackStack()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.task_item_container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
     private fun setupRecyclerView() {
-        val rvShopList = findViewById<RecyclerView>(R.id.rv_task_list)
-        with(rvShopList) {
+        with(binding.rvTaskList) {
             taskListAdapter = TaskListAdapter()
             adapter = taskListAdapter
             recycledViewPool.setMaxRecycledViews(
@@ -40,7 +100,7 @@ class MainActivity : AppCompatActivity() {
                 TaskListAdapter.MAX_POOL_SIZE
             )
         }
-        setupSwipeListener(rvShopList)
+        setupSwipeListener(binding.rvTaskList)
 //        https://android-tools.ru/coding/dobavlyaem-knopki-pri-svajpe-v-recyclerview/
 //        https://droidbyme.medium.com/android-recyclerview-with-swipe-layout-ec62caedf694
         setupCBClickListener()
@@ -65,9 +125,16 @@ class MainActivity : AppCompatActivity() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val item = taskListAdapter.currentList[viewHolder.bindingAdapterPosition]
-                viewModel.deleteTaskItem(item)
-//                val intent = TaskItemActivity.mewIntentEditItem(rvTaskList.context, item.id)
-//                startActivity(intent)
+//                viewModel.deleteTaskItem(item)
+                thread {
+                    contentResolver.delete(
+                        Uri.parse("content://com.example.math/task_items"),
+                        null,
+                        arrayOf((item.id.toString()))
+                    )
+                }
+                val intent = TaskItemActivity.newIntentEditItem(rvTaskList.context, item.id)
+                startActivity(intent)
             }
         }
         val itemTouchHelper = ItemTouchHelper(callback)
@@ -76,12 +143,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListener() {
         taskListAdapter.onTaskItemClickListener = {
-            val intent = TaskItemActivity.mewIntentEditItem(this, it.id)
-            startActivity(intent)
+            if (isOnePaneMode()){
+                val intent = TaskItemActivity.newIntentEditItem(this, it.id)
+                startActivity(intent)
+            }else {
+                launchFragment(TaskItemFragment.newInstanceEditItem(it.id))
+            }
         }
     }
-
-
 
     private fun setupCBClickListener() {
         taskListAdapter.onTaskCBClickListener = {

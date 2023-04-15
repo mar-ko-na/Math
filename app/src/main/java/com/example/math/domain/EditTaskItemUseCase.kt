@@ -1,8 +1,12 @@
 package com.example.math.domain
 
-class EditTaskItemUseCase(private val taskListRepository: TaskListRepository) {
+import javax.inject.Inject
 
-    fun editTaskItem (taskItem: TaskItem){
+class EditTaskItemUseCase @Inject constructor(
+    private val taskListRepository: TaskListRepository
+) {
+
+    suspend fun editTaskItem (taskItem: TaskItem){
         taskListRepository.editTaskItem(taskItem)
     }
 }

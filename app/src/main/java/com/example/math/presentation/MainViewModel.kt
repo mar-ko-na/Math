@@ -1,29 +1,34 @@
 package com.example.math.presentation
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.math.data.TaskListRepositoryImpl
-import com.example.math.domain.*
+import androidx.lifecycle.viewModelScope
+import com.example.math.domain.DeleteTaskItemUseCase
+import com.example.math.domain.EditTaskItemUseCase
+import com.example.math.domain.GetTaskListUseCase
+import com.example.math.domain.TaskItem
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel : ViewModel() {
-
-    private val repository = TaskListRepositoryImpl
-
-    private val getTaskListUseCase = GetTaskListUseCase(repository)
-    private val deleteTaskItemUseCase = DeleteTaskItemUseCase(repository)
-    private val editTaskItemUseCase = EditTaskItemUseCase(repository)
+class MainViewModel @Inject constructor(
+    private val getTaskListUseCase: GetTaskListUseCase,
+    private val deleteTaskItemUseCase : DeleteTaskItemUseCase,
+    private val editTaskItemUseCase : EditTaskItemUseCase
+) : ViewModel(){
 
     val taskList = getTaskListUseCase.getTaskList()
 
-
-
     fun deleteTaskItem(taskItem: TaskItem){
-        deleteTaskItemUseCase.deleteTaskItem(taskItem)
+        viewModelScope.launch {
+            deleteTaskItemUseCase.deleteTaskItem(taskItem)
+        }
+
     }
 
     fun changeEnableState(taskItem: TaskItem){
-        val newItem = taskItem.copy(enabled = !taskItem.enabled)
-        editTaskItemUseCase.editTaskItem(newItem)
+        viewModelScope.launch {
+            val newItem = taskItem.copy(enabled = !taskItem.enabled)
+            editTaskItemUseCase.editTaskItem(newItem)
+        }
     }
 
 }

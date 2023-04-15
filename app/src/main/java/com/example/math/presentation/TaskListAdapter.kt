@@ -3,17 +3,18 @@ package com.example.math.presentation
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.ListAdapter
 import com.example.math.R
+import com.example.math.databinding.FragmentTaskItemBinding
+import com.example.math.databinding.ItemTaskEnabledBinding
 import com.example.math.domain.TaskItem
 
 class TaskListAdapter: ListAdapter<TaskItem, TaskItemViewHolder>(TaskItemDiffCallback()) {
 
     var onTaskCBClickListener: ((TaskItem) -> Unit)? = null
     var onTaskItemClickListener: ((TaskItem) -> Unit)? = null
-//        set(value){
-//            field = value
-//        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskItemViewHolder {
         val layout = when (viewType) {
@@ -21,40 +22,38 @@ class TaskListAdapter: ListAdapter<TaskItem, TaskItemViewHolder>(TaskItemDiffCal
             else -> throw RuntimeException("Unknown view type: $viewType")
         }
 
-        val view = LayoutInflater.from(parent.context).inflate(layout, parent, false)
-        return TaskItemViewHolder(view)
+        val binding = DataBindingUtil.inflate<ViewDataBinding>(
+            LayoutInflater.from(parent.context),
+            layout,
+            parent,
+            false
+        )
+        return TaskItemViewHolder(binding)
     }
 
     override fun onBindViewHolder(viewHolder: TaskItemViewHolder, position: Int) {
-
         val taskItem = getItem(position)
-        viewHolder.tvName.text = taskItem.name
-        viewHolder.tvWorker.text = taskItem.description
+        val binding = viewHolder.binding
 
-        viewHolder.cbEnabled.setOnCheckedChangeListener(null)
-        viewHolder.cbEnabled.isChecked = taskItem.enabled
-        viewHolder.cbEnabled.setOnCheckedChangeListener { _, isChecked ->
-            Log.d("MyLog", "cb is checked: $isChecked")
-            onTaskCBClickListener?.invoke(taskItem)
-        }
-        viewHolder.view.setOnClickListener{
+        binding.root.setOnClickListener{
             onTaskItemClickListener?.invoke(taskItem)
         }
-        
 
+        when (binding) {
+            is ItemTaskEnabledBinding -> {
+                binding.taskItem = taskItem
+                binding.cbEnabled.setOnCheckedChangeListener { _, isChecked ->
+                    Log.d("MyLog", "cb is checked: $isChecked")
+                    onTaskCBClickListener?.invoke(taskItem)
+                }
+            }
+        }
 
     }
-
-
 
     override fun getItemViewType(position: Int): Int {
-//        val item = getItem(position)
-
         return VIEW_TYPE_ENABLED
-
     }
-
-
 
     companion object {
 

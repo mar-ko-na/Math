@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.fragment.app.FragmentContainerView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.fragment.app.FragmentContainerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/task_item_container"
-    android:name="com.example.math.presentation.TaskItemFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTintMode="add"
     tools:context=".presentation.TaskItemActivity"
     tools:layout="@layout/fragment_task_item"
     />
 
+<!--    android:backgroundTintMode="add"-->
+
+<!--    android:name="com.example.math.presentation.TaskItemFragment"-->

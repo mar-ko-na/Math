@@ -3,19 +3,20 @@ package com.example.math.presentation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.math.data.TaskListRepositoryImpl
 import com.example.math.domain.AddTaskItemUseCase
 import com.example.math.domain.EditTaskItemUseCase
 import com.example.math.domain.GetTaskItemUseCase
 import com.example.math.domain.TaskItem
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TaskItemViewModel: ViewModel() {
-
-    private val repository = TaskListRepositoryImpl
-
-    private val getTaskItemUseCase = GetTaskItemUseCase(repository)
-    private val addTaskItemUseCase = AddTaskItemUseCase(repository)
-    private val editTaskItemUseCase = EditTaskItemUseCase(repository)
+class TaskItemViewModel @Inject constructor(
+    private val getTaskItemUseCase : GetTaskItemUseCase,
+            private val addTaskItemUseCase : AddTaskItemUseCase,
+            private val editTaskItemUseCase : EditTaskItemUseCase
+) : ViewModel(){
 
     private  val _errorInputName  = MutableLiveData<Boolean>()
     val errorInputName: LiveData<Boolean>
@@ -34,17 +35,21 @@ class TaskItemViewModel: ViewModel() {
         get() = _shouldCloseScreen
 
     fun getTaskItem(taskItemId: Int){
-        val item = getTaskItemUseCase.getTaskItem(taskItemId)
-        _taskItem.value = item
+        viewModelScope.launch {
+            val item = getTaskItemUseCase.getTaskItem(taskItemId)
+            _taskItem.value = item
+        }
     }
     fun addTaskItem(inputTaskName: String?, inputDescription: String?) {
         val name = parseName(inputTaskName)
         val description = parseDescription(inputDescription)
         val fieldsValid = validateInput(name, description)
         if (fieldsValid){
-            val taskItem = TaskItem(name, description,false)
-            addTaskItemUseCase.addTaskItem(taskItem)
-            finishWork()
+            viewModelScope.launch {
+                val taskItem = TaskItem(name, description, false)
+                addTaskItemUseCase.addTaskItem(taskItem)
+                finishWork()
+            }
         }
 
     }
@@ -54,9 +59,11 @@ class TaskItemViewModel: ViewModel() {
         val fieldsValid = validateInput(name, description)
         if (fieldsValid){
             _taskItem.value?.let {
-                val item = it.copy(name = name, description = description)
-                editTaskItemUseCase.editTaskItem(item)
-                finishWork()
+                viewModelScope.launch {
+                    val item = it.copy(name = name, description = description)
+                    editTaskItemUseCase.editTaskItem(item)
+                    finishWork()
+                }
             }
 
         }

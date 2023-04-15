@@ -1,8 +1,12 @@
 package com.example.math.domain
 
-class DeleteTaskItemUseCase(private val taskListRepository: TaskListRepository) {
+import javax.inject.Inject
 
-    fun deleteTaskItem (taskItem: TaskItem){
+class DeleteTaskItemUseCase @Inject constructor(
+    private val taskListRepository: TaskListRepository
+) {
+
+    suspend fun deleteTaskItem (taskItem: TaskItem){
         taskListRepository.deleteTaskItem(taskItem)
     }
 }
